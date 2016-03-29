@@ -1,10 +1,36 @@
 #!/bin/bash
 
+# Variables
+ROOTPATH=`pwd -P`
+ODM_BUILD="${ROOTPATH}/build"
+SB_BUILD="${ROOTPATH}/SuperBuild/build"
+SB_DL="${ROOTPATH}/SuperBuild/download"
+SB_INSTALL="${ROOTPATH}/SuperBuild/install"
+SB_SRC="${ROOTPATH}/SuperBuild/src"
+
 # Check OS
 if [ ! $(command -v apt-get) ]; then
   echo -e "\e[1;31mERROR: Not a Debian-based linux system. 
            Impossible to install OpenCV with this script\e[0;39m"
   exit 1
+fi
+
+reinstall=0
+
+# Parse arguments
+while [ "$1" != "" ]; do
+    case $1 in
+        -r | --reinstall )        shift
+                                  reinstall=1
+                                  ;;
+    esac
+    shift
+done
+
+## Reinstall
+if [ ${reinstall} = 1 ]; then
+    echo -e "\e[1;34mReinstall: Removing build directories\e[0;39m"
+    rm -rf -- ${ODM_BUILD} ${SB_BUILD} ${SB_DL} ${SB_INSTALL} ${SB_SRC}
 fi
 
 ## Before installing
